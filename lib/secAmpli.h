@@ -3,8 +3,12 @@
  * but put in form of a library for better reusability in other future projects
  * 
  **/
-#ifndef sec_amplif_h
-#define sec_amplif_h
+#ifndef secAmplif_h
+#define secAmplif_h
+#include "JeeLib.h"
+#include <avr/pgmspace.h>
+#include "SHA256.h"
+
 
 /** @brief Total number of nodes in the network */
 uint8_t const numNodes = 24;
@@ -136,7 +140,9 @@ void rlSend (uint8_t hdr, const void* data, uint8_t size);
  **/
 uint8_t rlReceive ();
 
-
+/**
+ * Reorganization of the steps in setup function into separate functions ? 
+ **/
 
 
 #endif
