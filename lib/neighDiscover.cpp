@@ -1,4 +1,4 @@
-#include "secAmpli.h"
+#include "neighDiscover.h"
 
 
 /** 
