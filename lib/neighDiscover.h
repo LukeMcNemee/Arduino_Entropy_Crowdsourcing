@@ -150,6 +150,8 @@ class neighDiscover{
      * amplification messages is calculate and initial link keys are established.
      **/
     void init();
+    //TODO: Cut this function down in more functions for more clarity
+
 
 }
 #endif
