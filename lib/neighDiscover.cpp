@@ -94,6 +94,25 @@ uint8_t neighDiscover::rlReceive () {
 }
 
 /** 
+ * @brief returns numNodes
+ **/
+uint8_t const getnumNodes(){
+  return numNodes;
+}
+
+/**
+ * @brief returns numNeigh
+ **/
+uint8_t getnumNeigh(){
+  return numNeigh;
+}
+
+/**
+ * @brief Identify the neighbours for a node.
+ * Simulates neighbour discovery for when network topology is not known in advance
+ **/
+
+/** 
  * @brief Setup of node performed when the node booted. 
  *
  * The configuration stored in EEPROM memory is loaded including the node ID. The intermediate 
@@ -118,7 +137,7 @@ void neighDiscover::init(){
   double centralRelDist2 = 0.01 * nodeTransmissionRange;
   double neighRelDist2 = 0.39 * nodeTransmissionRange;
 
-  // Identify node neighbours and respective distances (this simulates the node discovery phase and RSSI measurements for case when the netwrok topology is not known in advance)
+  // Identify node neighbours and respective distances (this simulates the node discovery phase and RSSI measurements for case when the network topology is not known in advance)
   distMember neighDistsNC[maxNeigh];
 
   for (uint8_t i = 0; i < numNodes; i++) { 

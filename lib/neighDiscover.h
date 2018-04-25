@@ -11,6 +11,17 @@
 #include "SHA256.h"
 
 class neighDiscover{
+  public:
+    /** 
+     * @brief returns numNodes
+     **/
+    uint8_t const getnumNodes();
+
+    /**
+     * @brief returns numNeigh
+     **/
+    uint8_t getnumNeigh();
+
   private:
     /** @brief Total number of nodes in the network */
     uint8_t const numNodes = 24;
@@ -150,7 +161,20 @@ class neighDiscover{
      * amplification messages is calculate and initial link keys are established.
      **/
     void init();
+    
     //TODO: Cut this function down in more functions for more clarity
+    
+    /**
+     * @brief Identify the neighbours for a node.
+     *  Simulates neighbour discovery for when network topology is not known in advance
+     **/
+    distMember identifyNeigh();
+  
+    /**
+     * @brief Find an intermediate node for every neighbour the node has. 
+     * @param neighDistsNP distMember structure containing neighbour information
+     **/
+    distMember findInterNode(distMember neighDistsNP);
 
 
 }
