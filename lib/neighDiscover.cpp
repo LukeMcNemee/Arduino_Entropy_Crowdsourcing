@@ -135,14 +135,29 @@ distMember identifyNeigh(){
  **/
 distMember findInterNode(distMember neighDistsNP){
   double distance;
-  
+
   // Compute the relative distances based on hybrid designed protocol HD Final parameters and the transmission range
   double centralRelDist1 = 0.69 * nodeTransmissionRange;
   double neighRelDist1 = 0.98 * nodeTransmissionRange;
   double centralRelDist2 = 0.01 * nodeTransmissionRange;
   double neighRelDist2 = 0.39 * nodeTransmissionRange;
-
+  // Calculate the two intermediate nodes for every neighbour
   for (uint8_t i = 0; i < numNeigh; i++) { 
+
+    // Get the neighbours and distances of particular neighbour NP (simulate the data received from the neighbour for case when the netwrok topology is not known in advance) 
+    uint8_t numNeighNP = 0;
+    distMember neighDistsNP[maxNeigh];
+
+    for (uint8_t j = 0; j < numNodes; j++) { 
+      distance = pgm_read_float(nodesDistTable[neighTable[i].id - 1] + j);
+      if (distance != 0) {
+        neighDistsNP[numNeighNP].id = j+1;
+        neighDistsNP[numNeighNP].dist = distance;
+
+        numNeighNP++;
+        if (numNeighNP == maxNeigh) break;
+      }
+    }    
     // Use the direct link for case where is no better neighbour 
     uint8_t interNode1 = neighTable[i].id;
     uint8_t interNode2 = neighTable[i].id;
@@ -183,6 +198,7 @@ distMember findInterNode(distMember neighDistsNP){
     neighTable[i].interNode1 = interNode1;
     neighTable[i].interNode2 = interNode2;
   }
+  return neighDistsNP;
 }
 
 /** 
