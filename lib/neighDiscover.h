@@ -174,7 +174,7 @@ class neighDiscover{
      * @brief Find an intermediate node for every neighbour the node has. 
      * @param neighDistsNP distMember structure containing neighbour information
      **/
-    distMember findInterNode(distMember neighDistsNP);
+    void findInterNode(distMember neighDistsNP);
 
 
 }

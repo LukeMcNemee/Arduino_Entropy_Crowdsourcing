@@ -133,7 +133,7 @@ distMember identifyNeigh(){
  * @brief Calculate intermediate node for every neighbour
  * @param neighDistsNC information about the neighbours
  **/
-distMember findInterNode(distMember neighDistsNP){
+void findInterNode(distMember neighDistsNP){
   double distance;
 
   // Compute the relative distances based on hybrid designed protocol HD Final parameters and the transmission range
@@ -188,7 +188,6 @@ distMember findInterNode(distMember neighDistsNP){
     // Store the final interNode 1 
     neighTable[i].interNode1 = interNode1;
   }
-  return neighDistsNP;
 }
 
 /** 
