@@ -141,7 +141,7 @@ distMember findInterNode(distMember neighDistsNP){
   double neighRelDist1 = 0.98 * nodeTransmissionRange;
   double centralRelDist2 = 0.01 * nodeTransmissionRange;
   double neighRelDist2 = 0.39 * nodeTransmissionRange;
-  // Calculate the two intermediate nodes for every neighbour
+  // Calculate one intermediate node for every neighbour
   for (uint8_t i = 0; i < numNeigh; i++) { 
 
     // Get the neighbours and distances of particular neighbour NP (simulate the data received from the neighbour for case when the netwrok topology is not known in advance) 
@@ -160,12 +160,9 @@ distMember findInterNode(distMember neighDistsNP){
     }    
     // Use the direct link for case where is no better neighbour 
     uint8_t interNode1 = neighTable[i].id;
-    uint8_t interNode2 = neighTable[i].id;
 
     double currentDistance1 = 0;
-    double currentDistance2 = 0;
     double minimalDistance1 = 2 * pow(nodeTransmissionRange, 2);
-    double minimalDistance2 = 2 * pow(nodeTransmissionRange, 2);
 
     // Identify the common neighbours
     for (uint8_t k = 0; k < numNeigh; k++) {          
@@ -174,7 +171,6 @@ distMember findInterNode(distMember neighDistsNP){
         if (neighDistsNC[k].id == neighDistsNP[l].id) {
 
           currentDistance1 = 0;
-          currentDistance2 = 0;
 
           currentDistance1 += pow(neighDistsNC[k].dist - centralRelDist1, 2);
           currentDistance1 += pow(neighDistsNP[l].dist - neighRelDist1, 2);
@@ -184,19 +180,13 @@ distMember findInterNode(distMember neighDistsNP){
             interNode1 = neighDistsNC[k].id;
           }          
 
-          currentDistance2 += pow(neighDistsNC[k].dist - centralRelDist2, 2);
-          currentDistance2 += pow(neighDistsNP[l].dist - neighRelDist2, 2);
 
-          if (currentDistance2 <= minimalDistance2) {
-            minimalDistance2 = currentDistance2;
-            interNode2 = neighDistsNC[k].id;
           }   
         }
       }
     }
-    // Store the final interNode 1 and interNode 2
+    // Store the final interNode 1 
     neighTable[i].interNode1 = interNode1;
-    neighTable[i].interNode2 = interNode2;
   }
   return neighDistsNP;
 }
