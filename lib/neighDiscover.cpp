@@ -201,7 +201,7 @@ void calculateNumMessages(){
 }
 
 void setNeighKeys(){
-// TO_BE_CHANGED Set the initial keys for my neighbours. 
+  // TO_BE_CHANGED Set the initial keys for my neighbours. 
   for (uint8_t i = 0; i < numNeigh; i++) {
     if (nodeId < neighTable[i].id) {
       neighTable[i].key[0] = nodeId;
@@ -212,20 +212,4 @@ void setNeighKeys(){
     }
   }
 }
-/** 
- * @brief Setup of node performed when the node booted. 
- *
- * The configuration stored in EEPROM memory is loaded including the node ID. The intermediate 
- * nodes for amplification process are determined during the setup phase. Total number of 
- * amplification messages is calculate and initial link keys are established.
- **/
 
-void neighDiscover::init(){
-  delay(100);
-
-  // Loading configuration (node ID, etc.)
-  rf12_configSilent();
-
-  // TO_BE_CHANGED Inicialize the random generator with unique node ID. The different method should be used in production usage.
-  randomSeed(nodeId);
-}

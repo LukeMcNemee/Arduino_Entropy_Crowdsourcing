@@ -153,16 +153,7 @@ class neighDiscover{
      **/
     uint8_t rlReceive ();
 
-    /** 
-     * @brief Setup of node performed when the node booted. 
-     *
-     * The configuration stored in EEPROM memory is loaded including the node ID. The intermediate 
-     * nodes for amplification process are determined during the setup phase. Total number of 
-     * amplification messages is calculate and initial link keys are established.
-     **/
-    void init();
     
-    //TODO: Cut this function down in more functions for more clarity
     
     /**
      * @brief Identify the neighbours for a node.
