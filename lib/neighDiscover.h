@@ -176,6 +176,10 @@ class neighDiscover{
      **/
     void findInterNode(distMember neighDistsNP);
 
+    void calculateNumMessages();
+
+    void setNeighKeys();
+
 
 }
 #endif
