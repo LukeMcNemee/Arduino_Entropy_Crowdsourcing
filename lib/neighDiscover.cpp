@@ -165,7 +165,7 @@ void findInterNode(distMember neighDistsNP){
     double minimalDistance1 = 2 * pow(nodeTransmissionRange, 2);
 
     // Identify the common neighbours
-    for (uint8_t k = 0; k < numNeigh; k++) {          
+    for (uint8_t k = 0; k < numNeigh; k++) {
       for (uint8_t l = 0; l < numNeighNP; l++) {
 
         if (neighDistsNC[k].id == neighDistsNP[l].id) {
@@ -179,15 +179,12 @@ void findInterNode(distMember neighDistsNP){
             minimalDistance1 = currentDistance1;
             interNode1 = neighDistsNC[k].id;
           }          
-
-
-          }   
-        }
+        }   
       }
     }
-    // Store the final interNode 1 
-    neighTable[i].interNode1 = interNode1;
   }
+  // Store the final interNode 1 
+  neighTable[i].interNode1 = interNode1;
 }
 
 /** 
