@@ -1,6 +1,7 @@
 #include "neighDiscover.h"
 
 
+
 /** 
  * @brief Function returning the link key for the particular neighbour.
  *
@@ -96,14 +97,14 @@ uint8_t neighDiscover::rlReceive () {
 /** 
  * @brief returns numNodes
  **/
-uint8_t const getnumNodes(){
+uint8_t const neighDiscover::getnumNodes(){
   return numNodes;
 }
 
 /**
  * @brief returns numNeigh
  **/
-uint8_t getnumNeigh(){
+uint8_t neighDiscover::getnumNeigh(){
   return numNeigh;
 }
 
@@ -111,7 +112,7 @@ uint8_t getnumNeigh(){
  * @brief Identify the neighbours for a node.
  * Identify node neighbours and respective distances (this simulates the node discovery phase and RSSI measurements for case when the network topology is not known in advance)
  **/
-distMember identifyNeigh(){
+distMember neighDiscover::identifyNeigh(){
   double distance;
   distMember neighDistsNC[maxNeigh];
 
@@ -133,7 +134,7 @@ distMember identifyNeigh(){
  * @brief Calculate intermediate node for every neighbour
  * @param neighDistsNC information about the neighbours
  **/
-void findInterNode(distMember neighDistsNP){
+void neighDiscover::findInterNode(distMember neighDistsNP){
   double distance;
 
   // Compute the relative distances based on hybrid designed protocol HD Final parameters and the transmission range
@@ -188,7 +189,7 @@ void findInterNode(distMember neighDistsNP){
 }
 
 // Calculate the total number of amplification messages to be sent, message interval and the neighbour for the first amplification attempt
-void calculateNumMessages(){
+void neighDiscover::calculateNumMessages(){
   saMsgToBeSent = numNeigh * 6;
   saMsgInterval = (double)amplifLength / (double)saMsgToBeSent;
   for (uint8_t i = 0; i < numNeigh; i++) {
@@ -200,7 +201,7 @@ void calculateNumMessages(){
   randNumber = random(saMsgInterval);
 }
 
-void setNeighKeys(){
+void neighDiscover::setNeighKeys(){
   // TO_BE_CHANGED Set the initial keys for my neighbours. 
   for (uint8_t i = 0; i < numNeigh; i++) {
     if (nodeId < neighTable[i].id) {
