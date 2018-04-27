@@ -1,4 +1,4 @@
-#include "neighDiscover.h"
+#include "lib/neighDiscover.h"
 
 using namespace neigh;
 neighDiscover   discovery;

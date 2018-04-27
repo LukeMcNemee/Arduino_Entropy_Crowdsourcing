@@ -113,29 +113,27 @@ uint8_t neighDiscover::getnumNeigh(){
  * @brief Identify the neighbours for a node.
  * Identify node neighbours and respective distances (this simulates the node discovery phase and RSSI measurements for case when the network topology is not known in advance)
  **/
-neighDiscover::distMember neighDiscover::identifyNeigh(){
+void neighDiscover::identifyNeigh(distMember** neighDistsNC){
   double distance;
-  distMember neighDistsNC[maxNeigh];
 
   for (uint8_t i = 0; i < numNodes; i++) { 
     distance = pgm_read_float(nodesDistTable[nodeId-1] + i);
     if (distance != 0) {
       neighTable[numNeigh].id = i+1;
-      neighDistsNC[numNeigh].id = i+1;
-      neighDistsNC[numNeigh].dist = distance;
+      neighDistsNC[numNeigh]->id = i+1;
+      neighDistsNC[numNeigh]->dist = distance;
 
       numNeigh++;
       if (numNeigh == maxNeigh) break;
     }
   }
-  return neighDistsNC;
 }
 
 /**
  * @brief Calculate intermediate node for every neighbour
  * @param neighDistsNC information about the neighbours
  **/
-void neighDiscover::findInterNode(distMember neighDistsNC){
+void neighDiscover::findInterNode(distMember* neighDistsNC){
   double distance;
 
   // Compute the relative distances based on hybrid designed protocol HD Final parameters and the transmission range
@@ -184,9 +182,9 @@ void neighDiscover::findInterNode(distMember neighDistsNC){
         }   
       }
     }
-  }
   // Store the final interNode 1 
   neighTable[i].interNode1 = interNode1;
+  }
 }
 
 // Calculate the total number of amplification messages to be sent, message interval and the neighbour for the first amplification attempt
