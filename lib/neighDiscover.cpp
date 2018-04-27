@@ -1,6 +1,7 @@
 #include "neighDiscover.h"
 
 
+using namespace neigh;
 
 /** 
  * @brief Function returning the link key for the particular neighbour.
@@ -112,7 +113,7 @@ uint8_t neighDiscover::getnumNeigh(){
  * @brief Identify the neighbours for a node.
  * Identify node neighbours and respective distances (this simulates the node discovery phase and RSSI measurements for case when the network topology is not known in advance)
  **/
-distMember neighDiscover::identifyNeigh(){
+neighDiscover::distMember neighDiscover::identifyNeigh(){
   double distance;
   distMember neighDistsNC[maxNeigh];
 
@@ -134,7 +135,7 @@ distMember neighDiscover::identifyNeigh(){
  * @brief Calculate intermediate node for every neighbour
  * @param neighDistsNC information about the neighbours
  **/
-void neighDiscover::findInterNode(distMember neighDistsNP){
+void neighDiscover::findInterNode(distMember neighDistsNC){
   double distance;
 
   // Compute the relative distances based on hybrid designed protocol HD Final parameters and the transmission range
