@@ -1,6 +1,8 @@
 #include "neighDiscover.h"
 
 
+using namespace neigh;
+
 /** 
  * @brief Function returning the link key for the particular neighbour.
  *
@@ -96,14 +98,14 @@ uint8_t neighDiscover::rlReceive () {
 /** 
  * @brief returns numNodes
  **/
-uint8_t const getnumNodes(){
+uint8_t const neighDiscover::getnumNodes(){
   return numNodes;
 }
 
 /**
  * @brief returns numNeigh
  **/
-uint8_t getnumNeigh(){
+uint8_t neighDiscover::getnumNeigh(){
   return numNeigh;
 }
 
@@ -111,29 +113,27 @@ uint8_t getnumNeigh(){
  * @brief Identify the neighbours for a node.
  * Identify node neighbours and respective distances (this simulates the node discovery phase and RSSI measurements for case when the network topology is not known in advance)
  **/
-distMember identifyNeigh(){
+void neighDiscover::identifyNeigh(distMember** neighDistsNC){
   double distance;
-  distMember neighDistsNC[maxNeigh];
 
   for (uint8_t i = 0; i < numNodes; i++) { 
     distance = pgm_read_float(nodesDistTable[nodeId-1] + i);
     if (distance != 0) {
       neighTable[numNeigh].id = i+1;
-      neighDistsNC[numNeigh].id = i+1;
-      neighDistsNC[numNeigh].dist = distance;
+      neighDistsNC[numNeigh]->id = i+1;
+      neighDistsNC[numNeigh]->dist = distance;
 
       numNeigh++;
       if (numNeigh == maxNeigh) break;
     }
   }
-  return neighDistsNC;
 }
 
 /**
  * @brief Calculate intermediate node for every neighbour
  * @param neighDistsNC information about the neighbours
  **/
-void findInterNode(distMember neighDistsNP){
+void neighDiscover::findInterNode(distMember* neighDistsNC){
   double distance;
 
   // Compute the relative distances based on hybrid designed protocol HD Final parameters and the transmission range
@@ -182,112 +182,13 @@ void findInterNode(distMember neighDistsNP){
         }   
       }
     }
-  }
   // Store the final interNode 1 
   neighTable[i].interNode1 = interNode1;
+  }
 }
 
-/** 
- * @brief Setup of node performed when the node booted. 
- *
- * The configuration stored in EEPROM memory is loaded including the node ID. The intermediate 
- * nodes for amplification process are determined during the setup phase. Total number of 
- * amplification messages is calculate and initial link keys are established.
- **/
-
-void neighDiscover::init(){
-  delay(100);
-
-  // Loading configuration (node ID, etc.)
-  rf12_configSilent();
-
-  // TO_BE_CHANGED Inicialize the random generator with unique node ID. The different method should be used in production usage.
-  randomSeed(nodeId);
-
-  double distance;
-
-  // Compute the relative distances based on hybrid designed protocol HD Final parameters and the transmission range
-  double centralRelDist1 = 0.69 * nodeTransmissionRange;
-  double neighRelDist1 = 0.98 * nodeTransmissionRange;
-  double centralRelDist2 = 0.01 * nodeTransmissionRange;
-  double neighRelDist2 = 0.39 * nodeTransmissionRange;
-
-  // Identify node neighbours and respective distances (this simulates the node discovery phase and RSSI measurements for case when the network topology is not known in advance)
-  distMember neighDistsNC[maxNeigh];
-
-  for (uint8_t i = 0; i < numNodes; i++) { 
-    distance = pgm_read_float(nodesDistTable[nodeId-1] + i);
-    if (distance != 0) {
-      neighTable[numNeigh].id = i+1;
-      neighDistsNC[numNeigh].id = i+1;
-      neighDistsNC[numNeigh].dist = distance;
-
-      numNeigh++;
-      if (numNeigh == maxNeigh) break;
-    }
-  }
-
-  // Calculate the two intermediate nodes for every neighbour
-  for (uint8_t i = 0; i < numNeigh; i++) { 
-
-    // Get the neighbours and distances of particular neighbour NP (simulate the data received from the neighbour for case when the netwrok topology is not known in advance) 
-    uint8_t numNeighNP = 0;
-    distMember neighDistsNP[maxNeigh];
-
-    for (uint8_t j = 0; j < numNodes; j++) { 
-      distance = pgm_read_float(nodesDistTable[neighTable[i].id - 1] + j);
-      if (distance != 0) {
-        neighDistsNP[numNeighNP].id = j+1;
-        neighDistsNP[numNeighNP].dist = distance;
-
-        numNeighNP++;
-        if (numNeighNP == maxNeigh) break;
-      }
-    }    
-
-    // Use the direct link for case where is no better neighbour 
-    uint8_t interNode1 = neighTable[i].id;
-    uint8_t interNode2 = neighTable[i].id;
-
-    double currentDistance1 = 0;
-    double currentDistance2 = 0;
-    double minimalDistance1 = 2 * pow(nodeTransmissionRange, 2);
-    double minimalDistance2 = 2 * pow(nodeTransmissionRange, 2);
-
-    // Identify the common neighbours
-    for (uint8_t k = 0; k < numNeigh; k++) {          
-      for (uint8_t l = 0; l < numNeighNP; l++) {
-
-        if (neighDistsNC[k].id == neighDistsNP[l].id) {
-
-          currentDistance1 = 0;
-          currentDistance2 = 0;
-
-          currentDistance1 += pow(neighDistsNC[k].dist - centralRelDist1, 2);
-          currentDistance1 += pow(neighDistsNP[l].dist - neighRelDist1, 2);
-
-          if (currentDistance1 <= minimalDistance1) {
-            minimalDistance1 = currentDistance1;
-            interNode1 = neighDistsNC[k].id;
-          }          
-
-          currentDistance2 += pow(neighDistsNC[k].dist - centralRelDist2, 2);
-          currentDistance2 += pow(neighDistsNP[l].dist - neighRelDist2, 2);
-
-          if (currentDistance2 <= minimalDistance2) {
-            minimalDistance2 = currentDistance2;
-            interNode2 = neighDistsNC[k].id;
-          }   
-        }
-      }
-    }
-
-    // Store the final interNode 1 and interNode 2
-    neighTable[i].interNode1 = interNode1;
-    neighTable[i].interNode2 = interNode2;
-  }
-
-  // Calculate the total number of amplification messages to be sent, message interval and the neighbour for the first amplification attempt
+// Calculate the total number of amplification messages to be sent, message interval and the neighbour for the first amplification attempt
+void neighDiscover::calculateNumMessages(){
   saMsgToBeSent = numNeigh * 6;
   saMsgInterval = (double)amplifLength / (double)saMsgToBeSent;
   for (uint8_t i = 0; i < numNeigh; i++) {
@@ -297,7 +198,9 @@ void neighDiscover::init(){
     }
   }
   randNumber = random(saMsgInterval);
+}
 
+void neighDiscover::setNeighKeys(){
   // TO_BE_CHANGED Set the initial keys for my neighbours. 
   for (uint8_t i = 0; i < numNeigh; i++) {
     if (nodeId < neighTable[i].id) {
@@ -309,3 +212,4 @@ void neighDiscover::init(){
     }
   }
 }
+
