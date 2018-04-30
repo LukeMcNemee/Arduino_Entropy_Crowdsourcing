@@ -8,6 +8,9 @@ void setup(){
   distMember* neighDistsNP = (distMember*) calloc(discovery.maxNeigh, sizeof(distMember));
   discovery.identifyNeigh(&neighDistsNP);
   discovery.findInterNode(neighDistsNP);
+  discovery.calculateNumMessages();
+  discovery.setNeighKeys();
+
 
 }
 
