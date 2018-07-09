@@ -17,6 +17,8 @@ namespace neigh
   {
     uint8_t id = 0;                                                            // Neighbour ID
     uint8_t interNode1 = 0;                                                    // First intermediate node for amplification
+    //EXPERIMENTAL trustLvl
+    ufloat8_t trustLvl = 1;                                                    // Modifier used to ponderate distance relatively to trust level of link, i.e. recent execution of SA protocol
     uint8_t interNode2 = 0;                                                    // Second intermediate node for amplification
     uint8_t key[16] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};        // Link key established with neighbouring node
     uint8_t myNonce[16] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};    // The nonce generated for that neighbour,  will be used after nonce confirmation packet received

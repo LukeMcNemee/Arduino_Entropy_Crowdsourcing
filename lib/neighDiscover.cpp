@@ -151,7 +151,8 @@ void neighDiscover::findInterNode(distMember* neighDistsNC){
     distMember neighDistsNP[maxNeigh];
 
     for (uint8_t j = 0; j < numNodes; j++) { 
-      distance = pgm_read_float(nodesDistTable[neighTable[i].id - 1] + j);
+      // EXPERIMENTAL trustLvl
+      distance = pgm_read_float(nodesDistTable[neighTable[i].id - 1] + j) * neighTable[i].trustLvl;
       if (distance != 0) {
         neighDistsNP[numNeighNP].id = j+1;
         neighDistsNP[numNeighNP].dist = distance;
